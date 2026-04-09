@@ -1,0 +1,410 @@
+{
+  "benchmark": "tools/call",
+  "tool_name": "get_mcp_client_ip",
+  "date": "2026-04-09T22:10:56.786Z",
+  "server_label": "paris-macbook",
+  "timeout_ms": 15000,
+  "jitter_ms": 84670,
+  "results": [
+    {
+      "group": "servers_temoins",
+      "name": "cloudflare_workers",
+      "url": "https://remote-mcp-server-cloudflare-workers.reboot.workers.dev/mcp",
+      "observed_call_chain": [
+        {
+          "role": "mcpclient",
+          "hostname": "nlaptop.home",
+          "platform": "darwin",
+          "node_version": "v24.14.0",
+          "ip": "90.79.168.37",
+          "geo": {
+            "city": "Clichy",
+            "region": "Île-de-France",
+            "country": "France",
+            "country_code": "FR",
+            "latitude": 48.9012,
+            "longitude": 2.3072
+          },
+          "fetch_count": 1
+        },
+        {
+          "role": "mcpserver",
+          "provider": "cloudflare_workers",
+          "url": "https://remote-mcp-server-cloudflare-workers.reboot.workers.dev/mcp",
+          "hostname": "remote-mcp-server-cloudflare-workers.reboot.workers.dev",
+          "resolved_ip": "2606:4700:3034::6815:240d",
+          "geo": {
+            "city": "Montreal",
+            "country": "Canada",
+            "country_code": "CA",
+            "latitude": 45.5019,
+            "longitude": -73.5674
+          }
+        }
+      ],
+      "ok": true,
+      "http_status": 200,
+      "timestamps": {
+        "mcpclient": {
+          "request_start_ms": 84891.807866,
+          "request_end_ms": 84969.350754
+        },
+        "mcpserver": {
+          "start_ms": 1775772651245,
+          "end_ms": 1775772651245
+        }
+      },
+      "tool_result": "{\"mcp_client_ip\":\"2a01:cb00:b00:1400:6c8e:e6a0:d39f:73f6\",\"hosting_provider\":\"cloudflare_workers\"}"
+    },
+    {
+      "group": "servers_temoins",
+      "name": "vercel",
+      "url": "https://vercel-delta-virid-14.vercel.app/api/mcp",
+      "observed_call_chain": [
+        {
+          "role": "mcpclient",
+          "hostname": "nlaptop.home",
+          "platform": "darwin",
+          "node_version": "v24.14.0",
+          "ip": "90.79.168.37",
+          "geo": {
+            "city": "Clichy",
+            "region": "Île-de-France",
+            "country": "France",
+            "country_code": "FR",
+            "latitude": 48.9012,
+            "longitude": 2.3072
+          },
+          "fetch_count": 2
+        },
+        {
+          "role": "mcpserver",
+          "provider": "vercel",
+          "url": "https://vercel-delta-virid-14.vercel.app/api/mcp",
+          "hostname": "vercel-delta-virid-14.vercel.app",
+          "resolved_ip": "216.198.79.67",
+          "geo": {
+            "city": "Cleveland",
+            "country": "United States",
+            "country_code": "US",
+            "latitude": 41.5059,
+            "longitude": -81.689
+          }
+        }
+      ],
+      "ok": true,
+      "http_status": 200,
+      "timestamps": {
+        "mcpclient": {
+          "request_start_ms": 85008.209494,
+          "request_end_ms": 86513.072924
+        },
+        "mcpserver": {
+          "start_ms": 1775772652581,
+          "end_ms": 1775772652593
+        }
+      },
+      "tool_result": "{\"mcp_client_ip\":\"90.79.168.37\",\"hosting_provider\":\"vercel\"}"
+    },
+    {
+      "group": "servers_temoins",
+      "name": "netlify",
+      "url": "https://mcp-benchmark-netlify.netlify.app/mcp",
+      "observed_call_chain": [
+        {
+          "role": "mcpclient",
+          "hostname": "nlaptop.home",
+          "platform": "darwin",
+          "node_version": "v24.14.0",
+          "ip": "90.79.168.37",
+          "geo": {
+            "city": "Clichy",
+            "region": "Île-de-France",
+            "country": "France",
+            "country_code": "FR",
+            "latitude": 48.9012,
+            "longitude": 2.3072
+          },
+          "fetch_count": 3
+        },
+        {
+          "role": "mcpserver",
+          "provider": "netlify",
+          "url": "https://mcp-benchmark-netlify.netlify.app/mcp",
+          "hostname": "mcp-benchmark-netlify.netlify.app",
+          "resolved_ip": "2a05:d014:58f:6200::259",
+          "geo": {
+            "city": "Frankfurt am Main",
+            "country": "Germany",
+            "country_code": "DE",
+            "latitude": 50.1109,
+            "longitude": 8.68213
+          }
+        }
+      ],
+      "ok": true,
+      "http_status": 200,
+      "timestamps": {
+        "mcpclient": {
+          "request_start_ms": 86551.044957,
+          "request_end_ms": 87738.066096
+        },
+        "mcpserver": {
+          "start_ms": 122,
+          "end_ms": 122
+        }
+      },
+      "tool_result": "{\"mcp_client_ip\":\"2a01:cb00:b00:1400:6c8e:e6a0:d39f:73f6\",\"hosting_provider\":\"netlify\"}"
+    },
+    {
+      "group": "servers_temoins",
+      "name": "railway",
+      "url": "https://mcp-benchmark-railway-production.up.railway.app/mcp",
+      "observed_call_chain": [
+        {
+          "role": "mcpclient",
+          "hostname": "nlaptop.home",
+          "platform": "darwin",
+          "node_version": "v24.14.0",
+          "ip": "90.79.168.37",
+          "geo": {
+            "city": "Clichy",
+            "region": "Île-de-France",
+            "country": "France",
+            "country_code": "FR",
+            "latitude": 48.9012,
+            "longitude": 2.3072
+          },
+          "fetch_count": 4
+        },
+        {
+          "role": "mcpserver",
+          "provider": "railway",
+          "url": "https://mcp-benchmark-railway-production.up.railway.app/mcp",
+          "hostname": "mcp-benchmark-railway-production.up.railway.app",
+          "resolved_ip": "151.101.2.15",
+          "geo": {
+            "city": "Montreal",
+            "country": "Canada",
+            "country_code": "CA",
+            "latitude": 45.5019,
+            "longitude": -73.5674
+          }
+        }
+      ],
+      "ok": true,
+      "http_status": 200,
+      "timestamps": {
+        "mcpclient": {
+          "request_start_ms": 87787.902717,
+          "request_end_ms": 88351.47793
+        },
+        "mcpserver": {
+          "start_ms": 91110510,
+          "end_ms": 91110510
+        }
+      },
+      "tool_result": "{\"mcp_client_ip\":\"90.79.168.37\",\"hosting_provider\":\"railway\"}"
+    },
+    {
+      "group": "servers_temoins",
+      "name": "supabase_edge_functions",
+      "url": "https://etidrwgmegfsusnrrpyc.supabase.co/functions/v1/mcp",
+      "observed_call_chain": [
+        {
+          "role": "mcpclient",
+          "hostname": "nlaptop.home",
+          "platform": "darwin",
+          "node_version": "v24.14.0",
+          "ip": "90.79.168.37",
+          "geo": {
+            "city": "Clichy",
+            "region": "Île-de-France",
+            "country": "France",
+            "country_code": "FR",
+            "latitude": 48.9012,
+            "longitude": 2.3072
+          },
+          "fetch_count": 5
+        },
+        {
+          "role": "mcpserver",
+          "provider": "supabase_edge_functions",
+          "url": "https://etidrwgmegfsusnrrpyc.supabase.co/functions/v1/mcp",
+          "hostname": "etidrwgmegfsusnrrpyc.supabase.co",
+          "resolved_ip": "104.18.38.10",
+          "geo": {
+            "city": "Toronto",
+            "country": "Canada",
+            "country_code": "CA",
+            "latitude": 43.6532,
+            "longitude": -79.3832
+          }
+        }
+      ],
+      "ok": true,
+      "http_status": 200,
+      "timestamps": {
+        "mcpclient": {
+          "request_start_ms": 88391.929546,
+          "request_end_ms": 88588.458273
+        },
+        "mcpserver": {
+          "start_ms": 22,
+          "end_ms": 23
+        }
+      },
+      "tool_result": "{\"mcp_client_ip\":\"90.79.168.37\",\"hosting_provider\":\"supabase_edge_functions\"}"
+    },
+    {
+      "group": "servers_temoins",
+      "name": "fermyon",
+      "url": "https://remote-mcp-server-fermyon-enkfidvd.fermyon.app/mcp",
+      "observed_call_chain": [
+        {
+          "role": "mcpclient",
+          "hostname": "nlaptop.home",
+          "platform": "darwin",
+          "node_version": "v24.14.0",
+          "ip": "90.79.168.37",
+          "geo": {
+            "city": "Clichy",
+            "region": "Île-de-France",
+            "country": "France",
+            "country_code": "FR",
+            "latitude": 48.9012,
+            "longitude": 2.3072
+          },
+          "fetch_count": 6
+        },
+        {
+          "role": "mcpserver",
+          "provider": "fermyon",
+          "url": "https://remote-mcp-server-fermyon-enkfidvd.fermyon.app/mcp",
+          "hostname": "remote-mcp-server-fermyon-enkfidvd.fermyon.app",
+          "resolved_ip": "52.7.60.222",
+          "geo": {
+            "city": "Ashburn",
+            "country": "United States",
+            "country_code": "US",
+            "latitude": 39.0438,
+            "longitude": -77.4874
+          }
+        }
+      ],
+      "ok": true,
+      "http_status": 200,
+      "timestamps": {
+        "mcpclient": {
+          "request_start_ms": 88669.192083,
+          "request_end_ms": 88939.941807
+        },
+        "mcpserver": {
+          "start_ms": 1,
+          "end_ms": 2
+        }
+      },
+      "tool_result": "{\"mcp_client_ip\":\"unknown\",\"hosting_provider\":\"fermyon\"}"
+    },
+    {
+      "group": "servers_temoins",
+      "name": "valtown",
+      "url": "https://NK5--1562c5ce32c411f1b64f42dde27851f2.web.val.run",
+      "observed_call_chain": [
+        {
+          "role": "mcpclient",
+          "hostname": "nlaptop.home",
+          "platform": "darwin",
+          "node_version": "v24.14.0",
+          "ip": "90.79.168.37",
+          "geo": {
+            "city": "Clichy",
+            "region": "Île-de-France",
+            "country": "France",
+            "country_code": "FR",
+            "latitude": 48.9012,
+            "longitude": 2.3072
+          },
+          "fetch_count": 7
+        },
+        {
+          "role": "mcpserver",
+          "provider": "valtown",
+          "url": "https://NK5--1562c5ce32c411f1b64f42dde27851f2.web.val.run",
+          "hostname": "nk5--1562c5ce32c411f1b64f42dde27851f2.web.val.run",
+          "resolved_ip": "2606:4700:20::681a:c76",
+          "geo": {
+            "city": "Montreal",
+            "country": "Canada",
+            "country_code": "CA",
+            "latitude": 45.5019,
+            "longitude": -73.5674
+          }
+        }
+      ],
+      "ok": true,
+      "http_status": 200,
+      "timestamps": {
+        "mcpclient": {
+          "request_start_ms": 89003.19822,
+          "request_end_ms": 89701.204052
+        },
+        "mcpserver": {
+          "start_ms": 74,
+          "end_ms": 74
+        }
+      },
+      "tool_result": "{\"mcp_client_ip\":\"2a01:cb00:b00:1400:6c8e:e6a0:d39f:73f6\",\"hosting_provider\":\"valtown\"}"
+    },
+    {
+      "group": "servers_temoins",
+      "name": "render",
+      "url": "https://mcp-hosting-benchmark.onrender.com/mcp",
+      "observed_call_chain": [
+        {
+          "role": "mcpclient",
+          "hostname": "nlaptop.home",
+          "platform": "darwin",
+          "node_version": "v24.14.0",
+          "ip": "90.79.168.37",
+          "geo": {
+            "city": "Clichy",
+            "region": "Île-de-France",
+            "country": "France",
+            "country_code": "FR",
+            "latitude": 48.9012,
+            "longitude": 2.3072
+          },
+          "fetch_count": 8
+        },
+        {
+          "role": "mcpserver",
+          "provider": "render",
+          "url": "https://mcp-hosting-benchmark.onrender.com/mcp",
+          "hostname": "mcp-hosting-benchmark.onrender.com",
+          "resolved_ip": "216.24.57.251",
+          "geo": {
+            "city": "San Francisco",
+            "country": "United States",
+            "country_code": "US",
+            "latitude": 37.7775,
+            "longitude": -122.397
+          }
+        }
+      ],
+      "ok": true,
+      "http_status": 200,
+      "timestamps": {
+        "mcpclient": {
+          "request_start_ms": 89750.221469,
+          "request_end_ms": 90501.534179
+        },
+        "mcpserver": {
+          "start_ms": 1424031,
+          "end_ms": 1424031
+        }
+      },
+      "tool_result": "{\"mcp_client_ip\":\"90.79.168.37\",\"hosting_provider\":\"render\"}"
+    }
+  ]
+}

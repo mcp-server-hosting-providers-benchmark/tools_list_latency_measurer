@@ -1,0 +1,15 @@
+[
+  {
+    "label": "paris_fr",
+    "source": "launchd_macbook",
+    "schedule": "every 2h at even UTC hours",
+    "active": true
+  },
+  {
+    "label": "github_actions_us_east",
+    "source": "github_actions",
+    "workflow": ".github/workflows/benchmark.yml",
+    "schedule": "every 2h at even UTC hours",
+    "active": true
+  }
+]

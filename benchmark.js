@@ -59,14 +59,28 @@ if (servers.length === 0) {
 
 // --- Géolocalisation d'une IP ---
 async function geolocate_self() {
-  const res = await fetch(
-    "http://ip-api.com/json/?fields=status,query,city,regionName,country,countryCode,lat,lon",
+  // Récupère IPv4 et IPv6 séparément via ipify
+  const [res4, res6] = await Promise.allSettled([
+    fetch("https://api4.ipify.org?format=json", { signal: AbortSignal.timeout(5000) }),
+    fetch("https://api6.ipify.org?format=json", { signal: AbortSignal.timeout(5000) }),
+  ]);
+  const ipv4 = res4.status === "fulfilled" ? (await res4.value.json().catch(() => null))?.ip ?? null : null;
+  const ipv6 = res6.status === "fulfilled" ? (await res6.value.json().catch(() => null))?.ip ?? null : null;
+
+  // Géolocalise l'IP primaire (IPv4 préféré)
+  const primary_ip = ipv4 ?? ipv6;
+  if (!primary_ip) throw new Error("impossible de résoudre l'IP publique");
+  const geo_res = await fetch(
+    `http://ip-api.com/json/${primary_ip}?fields=status,query,city,regionName,country,countryCode,lat,lon`,
     { signal: AbortSignal.timeout(5000) }
   );
-  const data = await res.json();
+  const data = await geo_res.json();
   if (data.status !== "success") throw new Error("ip-api.com: " + data.message);
+
   return {
-    ip: data.query,
+    ip: primary_ip,
+    ipv4,
+    ipv6,
     geo: {
       city: data.city,
       region: data.regionName,
@@ -188,6 +202,8 @@ const observed_call_chain_script = {
   platform: platform(),
   node_version: process.version,
   ip: self_context.ip,
+  ipv4: self_context.ipv4,
+  ipv6: self_context.ipv6,
   geo: self_context.geo,
   fetch_count: 0, // incrémenté à chaque fetch vers un MCP server
 };
