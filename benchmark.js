@@ -31,7 +31,6 @@ const config = existsSync(config_path) ? JSON.parse(readFileSync(config_path, "u
 
 const timeout_ms = parseInt(args.timeout ?? config.timeout_ms ?? "15000", 10);
 const group_filter = args.group ?? null;
-const server_label = args.label ?? config.server_label ?? hostname();
 const jitter_max_s = parseInt(args.jitter ?? config.jitter_max_seconds ?? "0", 10);
 
 // --- Jitter ---
@@ -177,6 +176,11 @@ try {
 } catch {
   self_context = { ip: null, geo: null };
 }
+
+const geo = self_context.geo;
+const server_label = geo?.city && geo?.country_code
+  ? `${geo.city.toLowerCase().replace(/\s+/g, "_")}_${geo.country_code.toLowerCase()}`
+  : "unknown";
 
 const observed_call_chain_script = {
   role: "mcpclient",
