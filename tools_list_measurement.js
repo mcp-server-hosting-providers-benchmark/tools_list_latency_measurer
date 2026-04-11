@@ -41,11 +41,11 @@ if (jitter_max_s > 0) {
   await new Promise(resolve => setTimeout(resolve, jitter_ms));
 }
 
-// --- Endpoints (source de vérité : repo remote_mcp_server_per_hosting_provider) ---
-const ENDPOINTS_URL = "https://raw.githubusercontent.com/NK5NK5/remote_mcp_server_per_hosting_provider/main/endpoints.json";
+// --- Endpoints (source de vérité : pipeline registry) ---
+const ENDPOINTS_URL = "https://raw.githubusercontent.com/NK5NK5/remote_mcp_hosting_provider_benchmark_pipeline_registry/main/mcp_servers_under_test.json";
 const endpoints_res = await fetch(ENDPOINTS_URL, { signal: AbortSignal.timeout(10000) });
 if (!endpoints_res.ok) {
-  console.error(`Impossible de récupérer endpoints.json depuis GitHub (${endpoints_res.status})`);
+  console.error(`Impossible de récupérer mcp_servers_under_test.json depuis GitHub (${endpoints_res.status})`);
   process.exit(1);
 }
 const raw = await endpoints_res.json();
@@ -56,7 +56,7 @@ const servers = Object.entries(raw)
   .map(([name, url]) => ({ name, url }));
 
 if (servers.length === 0) {
-  console.error("Aucun serveur trouvé dans endpoints.json.");
+  console.error("Aucun serveur trouvé dans mcp_servers_under_test.json.");
   process.exit(1);
 }
 
