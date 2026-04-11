@@ -20,6 +20,7 @@ const CONTRACT = JSON.parse(
 );
 
 const REPO = "NK5NK5/remote_mcp_hosting_provider_tools_list_latency_measurement";
+const REGISTRY_URL = "https://raw.githubusercontent.com/NK5NK5/remote_mcp_hosting_provider_benchmark_pipeline_registry/main/pipeline_components.json";
 const GH_TOKEN = process.env.GH_TOKEN || "";
 
 // --local-file <path> : skip level 3, use local file for levels 4 & 5, no push
@@ -135,62 +136,83 @@ function checkCompleteness() {
   return results;
 }
 
-// --- level 3 — output availability ------------------------------------------
+// --- load pingers from registry ---------------------------------------------
 
-function checkAvailability() {
+function loadPingers() {
+  try {
+    const registry = fetchJson(REGISTRY_URL);
+    const entry = registry.find((c) => c.name === CONTRACT.component);
+    return entry?.pingers ?? [];
+  } catch {
+    return [];
+  }
+}
+
+// --- level 3 — output availability (one check set per pinger) ---------------
+
+function checkAvailability(pingers) {
   const results = [];
   const maxAgeMs = CONTRACT.levels[2].max_age_hours * 60 * 60 * 1000;
   let artifactData = null;
+  const pingerResults = [];
 
-  // recent_run_succeeded
-  let recentRunId = null;
-  try {
-    const runs = ghApi(`/repos/${REPO}/actions/runs?status=success&per_page=10`);
-    const now = Date.now();
-    const recent = (runs.workflow_runs || []).find(
-      (r) => now - new Date(r.created_at).getTime() < maxAgeMs
-    );
-    if (recent) {
-      results.push(pass("recent_run_succeeded"));
-      recentRunId = recent.id;
+  for (const pinger of pingers) {
+    if (pinger.source === "github_actions") {
+      // verifiable — check GH Actions artifacts
+      let recentRunId = null;
+      try {
+        const runs = ghApi(`/repos/${REPO}/actions/runs?status=success&per_page=10`);
+        const now = Date.now();
+        const recent = (runs.workflow_runs || []).find(
+          (r) => now - new Date(r.created_at).getTime() < maxAgeMs
+        );
+        if (recent) {
+          results.push(pass(`recent_run_succeeded_${pinger.label}`));
+          recentRunId = recent.id;
+        } else {
+          results.push(fail(`recent_run_succeeded_${pinger.label}`, `no successful run in the last ${CONTRACT.levels[2].max_age_hours}h`));
+        }
+      } catch {
+        results.push(fail(`recent_run_succeeded_${pinger.label}`, "could not reach GitHub Actions runs API"));
+      }
+
+      if (!recentRunId) {
+        results.push(fail(`recent_artifact_exists_${pinger.label}`, "skipped — no recent successful run"));
+        pingerResults.push({ label: pinger.label, tested: false });
+        continue;
+      }
+
+      try {
+        const artifacts = ghApi(`/repos/${REPO}/actions/runs/${recentRunId}/artifacts`);
+        if (artifacts.total_count === 0) {
+          results.push(fail(`recent_artifact_exists_${pinger.label}`, "no artifacts found for the latest successful run"));
+          pingerResults.push({ label: pinger.label, tested: false });
+          continue;
+        }
+        results.push(pass(`recent_artifact_exists_${pinger.label}`));
+
+        const artifactId = artifacts.artifacts[0].id;
+        const auth = GH_TOKEN ? `-H "Authorization: Bearer ${GH_TOKEN}"` : "";
+        exec(`curl -sfL ${auth} "https://api.github.com/repos/${REPO}/actions/artifacts/${artifactId}/zip" -o ${TMP_ZIP}`);
+        exec(`rm -rf ${TMP_DIR} && mkdir -p ${TMP_DIR}`);
+        exec(`unzip -o ${TMP_ZIP} -d ${TMP_DIR}`);
+        const files = fs.readdirSync(TMP_DIR).filter((f) => f.endsWith(".json"));
+        if (files.length > 0) {
+          artifactData = JSON.parse(fs.readFileSync(path.join(TMP_DIR, files[0]), "utf8"));
+        }
+        pingerResults.push({ label: pinger.label, tested: true, source: "github_actions_artifact" });
+      } catch (e) {
+        results.push(fail(`recent_artifact_exists_${pinger.label}`, `artifact download failed — ${e.message}`));
+        pingerResults.push({ label: pinger.label, tested: false });
+      }
     } else {
-      results.push(fail("recent_run_succeeded", `no successful run in the last ${CONTRACT.levels[2].max_age_hours}h`));
+      // not verifiable from GitHub Actions
+      results.push({ id: `pinger_out_of_scope_${pinger.label}`, status: "skipped", reason: `source=${pinger.source} — not reachable from GitHub Actions` });
+      pingerResults.push({ label: pinger.label, tested: false, reason: `source=${pinger.source} — not reachable from GitHub Actions` });
     }
-  } catch {
-    results.push(fail("recent_run_succeeded", "could not reach GitHub Actions runs API"));
   }
 
-  if (!recentRunId) {
-    results.push(fail("recent_artifact_exists", "skipped — no recent successful run"));
-    return { results, artifactData };
-  }
-
-  // recent_artifact_exists + download
-  try {
-    const artifacts = ghApi(`/repos/${REPO}/actions/runs/${recentRunId}/artifacts`);
-    if (artifacts.total_count === 0) {
-      results.push(fail("recent_artifact_exists", "no artifacts found for the latest successful run"));
-      return { results, artifactData };
-    }
-
-    results.push(pass("recent_artifact_exists"));
-
-    // download and unzip
-    const artifactId = artifacts.artifacts[0].id;
-    const auth = GH_TOKEN ? `-H "Authorization: Bearer ${GH_TOKEN}"` : "";
-    exec(`curl -sfL ${auth} "https://api.github.com/repos/${REPO}/actions/artifacts/${artifactId}/zip" -o ${TMP_ZIP}`);
-    exec(`rm -rf ${TMP_DIR} && mkdir -p ${TMP_DIR}`);
-    exec(`unzip -o ${TMP_ZIP} -d ${TMP_DIR}`);
-
-    const files = fs.readdirSync(TMP_DIR).filter((f) => f.endsWith(".json"));
-    if (files.length > 0) {
-      artifactData = JSON.parse(fs.readFileSync(path.join(TMP_DIR, files[0]), "utf8"));
-    }
-  } catch (e) {
-    results.push(fail("recent_artifact_exists", `artifact download failed — ${e.message}`));
-  }
-
-  return { results, artifactData };
+  return { results, artifactData, pingerResults };
 }
 
 // --- level 4 — output integrity structure -----------------------------------
@@ -242,7 +264,7 @@ function checkContent(data) {
     : fail("artifact_run_metadata", `jitter_ms invalid: ${jitter}`));
 
   // artifact_result_fields
-  const badFields = results.filter((r) => !r.url || typeof r.http_status !== "number");
+  const badFields = results.filter((r) => !r.url || (typeof r.http_status !== "number" && !(r.ok === false && r.http_status === null)));
   checks.push(badFields.length === 0
     ? pass("artifact_result_fields")
     : fail("artifact_result_fields", `${badFields.length} result(s) missing url or http_status`));
@@ -364,31 +386,33 @@ function pushReport(report) {
 
 const discoverability = checkDiscoverability();
 const completeness = checkCompleteness();
+const pingers = loadPingers();
 
 let availability = [];
 let artifactData = null;
+let pingerResults = [];
 
 if (LOCAL_FILE) {
   console.log(`\n[verify] --local-file mode: skipping level 3, reading ${LOCAL_FILE}`);
   try {
     artifactData = JSON.parse(fs.readFileSync(LOCAL_FILE, "utf8"));
-    availability = [{ id: "recent_run_succeeded", status: "skipped" }, { id: "recent_artifact_exists", status: "skipped" }];
   } catch (e) {
-    availability = [
-      { id: "recent_run_succeeded", status: "skipped" },
-      { id: "recent_artifact_exists", status: "fail", reason: `could not read local file: ${e.message}` },
-    ];
+    availability = [{ id: "local_file_read", status: "fail", reason: `could not read local file: ${e.message}` }];
   }
 } else {
-  ({ results: availability, artifactData } = checkAvailability());
+  ({ results: availability, artifactData, pingerResults } = checkAvailability(pingers));
 }
 
 const structure = checkStructure(artifactData);
 const content = checkContent(artifactData);
 
-const allChecks = [...discoverability, ...completeness,
-  ...availability.filter(c => c.status !== "skipped"),
-  ...structure, ...content];
+const allChecks = [
+  ...discoverability,
+  ...completeness,
+  ...availability.filter((c) => c.status !== "skipped"),
+  ...structure,
+  ...content,
+];
 
 const summary = {
   pass: allChecks.filter((c) => c.status === "pass").length,
@@ -399,6 +423,8 @@ const summary = {
 const report = {
   component: CONTRACT.component,
   verified_at: new Date().toISOString(),
+  pingers_tested: pingerResults.filter((p) => p.tested).map((p) => p.label),
+  pingers_out_of_scope: pingerResults.filter((p) => !p.tested).map((p) => ({ label: p.label, reason: p.reason })),
   summary,
   checks: allChecks,
 };

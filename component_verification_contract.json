@@ -3,6 +3,7 @@
   "verify_script": "node verify.js",
   "report_output": "data branch — verify_report_TIMESTAMP.json",
   "result_states": ["pass", "fail"],
+  "audit_scope": "GitHub Actions pinger only — MacBook pinger is out of scope (local filesystem, not reachable from GitHub Actions). MacBook pinger coverage is delegated to the collector verifier which consolidates both sources.",
   "levels": [
     {
       "level": 1,
@@ -108,7 +109,7 @@
         },
         {
           "id": "artifact_result_fields",
-          "description": "Each result has url (non-empty string) and http_status (integer)"
+          "description": "Each result has url (non-empty string) and http_status (integer or null when ok=false)"
         },
         {
           "id": "artifact_result_ok_field",
