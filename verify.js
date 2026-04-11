@@ -157,8 +157,8 @@ function checkAvailability(pingers) {
   const pingerResults = [];
 
   for (const pinger of pingers) {
-    if (pinger.source === "github_actions") {
-      // verifiable — check GH Actions artifacts
+    if (pinger.data_url) {
+      // verifiable — has a public data_url exposing its results
       let recentRunId = null;
       try {
         const runs = ghApi(`/repos/${REPO}/actions/runs?status=success&per_page=10`);
@@ -173,7 +173,7 @@ function checkAvailability(pingers) {
           results.push(fail(`recent_run_succeeded_${pinger.label}`, `no successful run in the last ${CONTRACT.levels[2].max_age_hours}h`));
         }
       } catch {
-        results.push(fail(`recent_run_succeeded_${pinger.label}`, "could not reach GitHub Actions runs API"));
+        results.push(fail(`recent_run_succeeded_${pinger.label}`, "could not reach pinger data_url"));
       }
 
       if (!recentRunId) {
@@ -200,15 +200,15 @@ function checkAvailability(pingers) {
         if (files.length > 0) {
           artifactData = JSON.parse(fs.readFileSync(path.join(TMP_DIR, files[0]), "utf8"));
         }
-        pingerResults.push({ label: pinger.label, tested: true, source: "github_actions_artifact" });
+        pingerResults.push({ label: pinger.label, tested: true, data_url: pinger.data_url });
       } catch (e) {
         results.push(fail(`recent_artifact_exists_${pinger.label}`, `artifact download failed — ${e.message}`));
         pingerResults.push({ label: pinger.label, tested: false });
       }
     } else {
-      // not verifiable from GitHub Actions
-      results.push({ id: `pinger_out_of_scope_${pinger.label}`, status: "skipped", reason: `source=${pinger.source} — not reachable from GitHub Actions` });
-      pingerResults.push({ label: pinger.label, tested: false, reason: `source=${pinger.source} — not reachable from GitHub Actions` });
+      // no data_url — not publicly verifiable
+      results.push({ id: `pinger_out_of_scope_${pinger.label}`, status: "skipped", reason: `no data_url — results not publicly accessible` });
+      pingerResults.push({ label: pinger.label, tested: false, reason: "no data_url — results not publicly accessible" });
     }
   }
 
