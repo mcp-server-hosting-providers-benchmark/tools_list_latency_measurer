@@ -200,7 +200,14 @@ function checkAvailability(pingers) {
         if (files.length > 0) {
           artifactData = JSON.parse(fs.readFileSync(path.join(TMP_DIR, files[0]), "utf8"));
         }
-        pingerResults.push({ label: pinger.label, tested: true, data_url: pinger.data_url });
+        pingerResults.push({
+          label: pinger.label,
+          tested: true,
+          data_url: pinger.data_url,
+          run_id: recentRunId,
+          files_verified: files.length,
+          filename: files[0] ?? null,
+        });
       } catch (e) {
         results.push(fail(`recent_artifact_exists_${pinger.label}`, `artifact download failed — ${e.message}`));
         pingerResults.push({ label: pinger.label, tested: false });
@@ -423,7 +430,12 @@ const summary = {
 const report = {
   component: CONTRACT.component,
   verified_at: new Date().toISOString(),
-  pingers_tested: pingerResults.filter((p) => p.tested).map((p) => p.label),
+  pingers_tested: pingerResults.filter((p) => p.tested).map((p) => ({
+    label: p.label,
+    run_id: p.run_id,
+    files_verified: p.files_verified,
+    filename: p.filename,
+  })),
   pingers_out_of_scope: pingerResults.filter((p) => !p.tested).map((p) => ({ label: p.label, reason: p.reason })),
   summary,
   checks: allChecks,
