@@ -42,7 +42,7 @@ if (jitter_max_s > 0) {
 }
 
 // --- Endpoints (source de vérité : pipeline registry) ---
-const ENDPOINTS_URL = "https://raw.githubusercontent.com/mcp-server-hosting-providers-benchmark/pipeline_components_registry/main/mcp_servers_under_test.json";
+const ENDPOINTS_URL = "https://raw.githubusercontent.com/mcp-server-hosting-providers-benchmark/mcp_server_per_hosting_provider/main/mcp_servers_under_test.json";
 const endpoints_res = await fetch(ENDPOINTS_URL, { signal: AbortSignal.timeout(10000) });
 if (!endpoints_res.ok) {
   console.error(`Impossible de récupérer mcp_servers_under_test.json depuis GitHub (${endpoints_res.status})`);
