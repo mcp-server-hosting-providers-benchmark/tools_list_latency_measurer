@@ -172,9 +172,9 @@ function checkAvailability(pingers) {
           : `/repos/${REPO}/actions/runs?status=success&per_page=10`;
         const runs = ghApi(runsUrl);
         const now = Date.now();
-        const recent = (runs.workflow_runs || []).find(
-          (r) => now - new Date(r.created_at).getTime() < maxAgeMs
-        );
+        const recent = (runs.workflow_runs || [])
+          .filter((r) => !workflowId || r.workflow_id === workflowId)
+          .find((r) => now - new Date(r.created_at).getTime() < maxAgeMs);
         if (recent) {
           results.push(pass(`recent_run_succeeded_${pinger.label}`));
           recentRunId = recent.id;

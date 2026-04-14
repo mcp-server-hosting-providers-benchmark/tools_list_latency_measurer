@@ -13,11 +13,11 @@
         {
           "id": "registry_accessible",
           "description": "Public registry responds with HTTP 200",
-          "url": "https://raw.githubusercontent.com/NK5NK5/remote_mcp_hosting_provider_benchmark_pipeline_registry/main/pipeline_components.json"
+          "url": "https://raw.githubusercontent.com/mcp-server-hosting-providers-benchmark/pipeline_components_registry/main/pipeline_components.json"
         },
         {
           "id": "registry_has_component_entry",
-          "description": "Registry contains an entry with name = remote_mcp_hosting_provider_tools_list_latency_measurement"
+          "description": "Registry contains an entry with name = tools_list_latency_measurer"
         },
         {
           "id": "registry_has_data_url",
@@ -26,7 +26,7 @@
         {
           "id": "component_contract_accessible",
           "description": "component_contract.json is publicly accessible from the component repo",
-          "url": "https://raw.githubusercontent.com/NK5NK5/remote_mcp_hosting_provider_tools_list_latency_measurement/main/component_contract.json"
+          "url": "https://raw.githubusercontent.com/mcp-server-hosting-providers-benchmark/tools_list_latency_measurer/main/component_contract.json"
         }
       ]
     },
@@ -43,12 +43,12 @@
         {
           "id": "workflow_present",
           "description": "GitHub Actions workflow benchmark.yml exists and has run at least once",
-          "url": "https://api.github.com/repos/NK5NK5/remote_mcp_hosting_provider_tools_list_latency_measurement/actions/workflows"
+          "url": "https://api.github.com/repos/mcp-server-hosting-providers-benchmark/tools_list_latency_measurer/actions/workflows"
         },
         {
           "id": "verify_script_present",
           "description": "verify.js is publicly accessible from the component repo",
-          "url": "https://raw.githubusercontent.com/NK5NK5/remote_mcp_hosting_provider_tools_list_latency_measurement/main/verify.js"
+          "url": "https://raw.githubusercontent.com/mcp-server-hosting-providers-benchmark/tools_list_latency_measurer/main/verify.js"
         }
       ]
     },
@@ -61,7 +61,7 @@
         {
           "id": "recent_run_succeeded",
           "description": "At least one successful GitHub Actions run in the last 3 hours",
-          "url": "https://api.github.com/repos/NK5NK5/remote_mcp_hosting_provider_tools_list_latency_measurement/actions/runs"
+          "url": "https://api.github.com/repos/mcp-server-hosting-providers-benchmark/tools_list_latency_measurer/actions/runs"
         },
         {
           "id": "recent_artifact_exists",

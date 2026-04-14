@@ -55,7 +55,7 @@ node benchmark.js
 
 ## Providers témoins déployés
 
-Repo : `NK5NK5/remote_mcp_server_per_hosting_provider`
+Repo : `mcp-server-hosting-providers-benchmark/mcp_server_per_hosting_provider`
 
 | Provider | URL |
 |----------|-----|
