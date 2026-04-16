@@ -25,6 +25,16 @@ const args = Object.fromEntries(
   }, [])
 );
 
+// --- Pinger source URL (identifie la plateforme CI qui exécute ce script) ---
+// GitLab CI expose CI_PROJECT_URL  : https://gitlab.com/org/repo
+// GitHub Actions expose GITHUB_SERVER_URL + GITHUB_REPOSITORY : https://github.com/org/repo
+// Sur une machine locale, ces variables sont absentes → null
+const pinger_source_url =
+  process.env.CI_PROJECT_URL
+  ?? (process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY
+      ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`
+      : null);
+
 // --- Config (config.json + overrides CLI) ---
 const config_path = join(import.meta.dirname, "config.json");
 const config = existsSync(config_path) ? JSON.parse(readFileSync(config_path, "utf-8")) : {};
@@ -300,6 +310,7 @@ writeFileSync(filepath, JSON.stringify({
   benchmark: "tools/list",
   date: new Date().toISOString(),
   server_label,
+  pinger_source_url,
   timeout_ms,
   jitter_ms,
   results,
