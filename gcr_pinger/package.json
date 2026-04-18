@@ -1,0 +1,10 @@
+{
+  "name": "gcr-pinger",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cloud Run Job pinger — mesure tools/list latency depuis une région GCR",
+  "main": "pinger.js",
+  "engines": {
+    "node": ">=22"
+  }
+}
