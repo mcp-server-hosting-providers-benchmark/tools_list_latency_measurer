@@ -1,0 +1,10 @@
+{
+  "name": "remote_mcp_hosting_provider_tools_list_latency_measurer",
+  "friction": "No automated, geographically distributed measurement of tools/list response time for remote MCP server hosting providers.",
+  "input": "List of MCP server endpoints fetched at runtime from mcp_server_per_hosting_provider/mcp_servers_under_test.json (GitHub raw URL).",
+  "output": "One tools_list_<timestamp>.json file per execution, written to GCS bucket gs://mcp-benchmark-results/<pinger_label>/. Contains timestamps, latency, tools returned, and pinger metadata.",
+  "when_to_use": "To understand how latency measurements are collected, how pingers are deployed, or how to add a new pinger region.",
+  "when_not_to_use": "To publish results — use tools_list_latency_publisher.",
+  "schedule": "GitHub Actions cron every 30 minutes (trigger_pingers.yml) triggers one Cloud Run Job per slot in relay — 12 pingers × 30 min = 6h cycle, each origin pings every 6h.",
+  "usage": "Deploy: gcr_pinger/deploy_all_regions.sh — Trigger manually: gcloud run jobs execute mcp-pinger-<label> --region=<region> --project=<project>"
+}
