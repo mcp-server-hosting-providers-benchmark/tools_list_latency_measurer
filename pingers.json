@@ -10,5 +10,5 @@
   "mumbai_in":       "googlecloudrun://tools-list-latency-pingers-2/asia-south1/mcp-pinger-mumbai-in",
   "sao_paulo_br":    "googlecloudrun://tools-list-latency-pingers-2/southamerica-east1/mcp-pinger-sao-paulo-br",
   "tel_aviv_il":     "googlecloudrun://tools-list-latency-pingers-2/me-west1/mcp-pinger-tel-aviv-il",
-  "johannesburg_za": "googlecloudrun://tools-list-latency-pingers-2/africa-south1/mcp-pinger-johannesburg-za"
+  "johannesburg_za": "googlecloudrun://tools-list-latency-pingers-3/africa-south1/mcp-pinger-johannesburg-za"
 }

@@ -38,7 +38,7 @@ jobs:
           declare -a PROJECTS=(
             tools-list-latency-pingers tools-list-latency-pingers tools-list-latency-pingers tools-list-latency-pingers
             tools-list-latency-pingers tools-list-latency-pingers-3 tools-list-latency-pingers-2 tools-list-latency-pingers-2
-            tools-list-latency-pingers-2 tools-list-latency-pingers-2 tools-list-latency-pingers-2 tools-list-latency-pingers-2
+            tools-list-latency-pingers-2 tools-list-latency-pingers-2 tools-list-latency-pingers-2 tools-list-latency-pingers-3
           )
 
           if [ -n "${{ inputs.slot }}" ]; then
